@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Main File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/andrew/robocin-software/start.py",  // Adjust this path
+            "console": "integratedTerminal"
+        }
+    ]
+}
