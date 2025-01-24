@@ -7,7 +7,6 @@ from utils.Point import Point
 from utils.FixedQueue import FixedQueue
 from utils.ssl.small_field import SSLHRenderField
 from agent import ExampleAgent
-from random_agent import RandomAgent
 import random
 import pygame
 from utils.CLI import Difficulty
@@ -17,8 +16,8 @@ class SSLExampleEnv(SSLBaseEnv):
         field = 2   # 1: SSL Div B    2: SSL Software challenge
         super().__init__(
             field_type=field, 
-            n_robots_blue=11,
-            n_robots_yellow=11, 
+            n_robots_blue=1,
+            n_robots_yellow=1, 
             time_step=0.025,
             render_mode=render_mode)
         
@@ -38,8 +37,6 @@ class SSLExampleEnv(SSLBaseEnv):
         self.targets_per_round = 1
 
         self.my_agents = {0: ExampleAgent(0, False)}
-        self.blue_agents = {i: RandomAgent(i, False) for i in range(1, 11)}
-        self.yellow_agents = {i: RandomAgent(i, True) for i in range(0, 11)}
 
         self.gen_target_prob = 0.003
 
@@ -57,7 +54,7 @@ class SSLExampleEnv(SSLBaseEnv):
             if target not in self.all_points:
                 self.all_points.push(target)
                 
-        # Visible path drawing control
+        # Visible path drawing control <------------------IMPORTANT
         for i in self.my_agents:
             self.robots_paths[i].push(Point(self.frame.robots_blue[i].x, self.frame.robots_blue[i].y))
 
@@ -187,7 +184,7 @@ class SSLExampleEnv(SSLBaseEnv):
                 my_path = [pos_transform(*p) for p in self.robots_paths[i]]
                 pygame.draw.lines(self.window_surface, (255, 0, 0), False, my_path, 1)
 
-    def draw_target(self, screen, transformer, point, color):
+    def draw_target(self, screen, transformer, point, color): #<------------------IMPORTANT
         x, y = transformer(point.x, point.y)
         size = 0.09 * self.field_renderer.scale
         pygame.draw.circle(screen, color, (x, y), size, 2)
