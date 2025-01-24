@@ -43,6 +43,10 @@ class SSLExampleEnv(SSLBaseEnv):
         if field == 2:
             self.field_renderer = SSLHRenderField()
             self.window_size = self.field_renderer.window_size
+
+        # Add fixed target position as class attribute
+        self.target_x = 1.0  # Set your desired x coordinate
+        self.target_y = 0.0  # Set your desired y coordinate
         
     def _frame_to_observations(self):
         ball, robot = self.frame.ball, self.frame.robots_blue[0]
@@ -77,10 +81,9 @@ class SSLExampleEnv(SSLBaseEnv):
                 self.blue_agents.pop(len(self.my_agents))
                 self.my_agents[len(self.my_agents)] = ExampleAgent(len(self.my_agents), False)
 
-        # Generate new targets
+        # Replace random target generation with fixed position
         if len(self.targets) == 0:
-            for i in range(self.targets_per_round):
-                self.targets.append(Point(self.x(), self.y()))
+            self.targets = [Point(x=self.target_x, y=self.target_y)]
         
         obstacles = {id: robot for id, robot in self.frame.robots_blue.items()}
         for i in range(0, self.n_robots_yellow):
@@ -121,38 +124,39 @@ class SSLExampleEnv(SSLBaseEnv):
     def y(self):
         return random.uniform(-self.field.width/2 + self.min_dist, self.field.width/2 - self.min_dist)
     
-    def _get_initial_positions_frame(self):
+    def _get_initial_positions_frame(self): #change here
 
         def theta():
             return random.uniform(0, 360)
     
         pos_frame: Frame = Frame()
 
-        pos_frame.ball = Ball(x=self.x(), y=self.y())
+        pos_frame.ball = Ball(3.2, 2.285) #Ball far from the robots
 
         pos_frame.robots_blue[0] = Robot(x=self.x(), y=self.y(), theta=theta())
 
-        self.targets = [Point(x=self.x(), y=self.y())]
+        # Set initial target position
+        self.targets = [Point(x=self.target_x, y=self.target_y)]
 
         places = KDTree()
         places.insert((pos_frame.ball.x, pos_frame.ball.y))
 
-        for i in range(self.n_robots_blue):
+        for i in range(self.n_robots_blue): # <------------------IMPORTANT
             pos = (self.x(), self.y())
             while places.get_nearest(pos)[1] < self.min_dist:
                 pos = (self.x(), self.y())
 
             places.insert(pos)
-            pos_frame.robots_blue[i] = Robot(x=pos[0], y=pos[1], theta=theta())
+            pos_frame.robots_blue[i] = Robot(x=-1, y=0, theta=0)
         
 
-        for i in range(0, self.n_robots_yellow):
+        for i in range(0, self.n_robots_yellow): # <------------------IMPORTANT
             pos = (self.x(), self.y())
             while places.get_nearest(pos)[1] < self.min_dist:
                 pos = (self.x(), self.y())
 
             places.insert(pos)
-            pos_frame.robots_yellow[i] = Robot(x=pos[0], y=pos[1], theta=theta())
+            pos_frame.robots_yellow[i] = Robot(x=0, y=0, theta=0)
 
         return pos_frame
     
