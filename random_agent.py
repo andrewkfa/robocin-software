@@ -5,7 +5,7 @@ from utils.ssl.base_agent import BaseAgent
 import random
 
 class RandomAgent(BaseAgent):
-    def __init__(self, id=0, yellow=False, vel_mult=0.3):
+    def __init__(self, id=0, yellow=False, vel_mult=0.0):
         super().__init__(id, yellow)
         self.vel_mult = vel_mult
 

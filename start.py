@@ -1,10 +1,8 @@
 import gymnasium as gym
 import rsoccer_gym
 from gymnasium.envs.registration import register
-from utils.CLI import cli, Difficulty
+from utils.CLI import Difficulty
 import pygame
-
-args = cli()
 
 register(
     id="VSS-Project",
@@ -16,21 +14,18 @@ register(
     entry_point="sslenv:SSLExampleEnv"
 )
 
-env = gym.make("SSL-Project", difficulty=Difficulty(args.difficulty))
+env = gym.make("SSL-Project", difficulty=Difficulty(1)) #Just set the difficulty to 1
 
 env.reset()
 
-for i in range(1):
-    terminated = False
-    truncated = False
-    while not (terminated or truncated):
-        # Step using random actions
-        action = env.action_space.sample()
-        next_state, reward, terminated, _, _ = env.step(action)
+terminated = False
+while not terminated:
+    action = env.action_space.sample()
+    next_state, reward, terminated, _, _ = env.step(action)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminated = True
-                break
-            
-    env.close()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            terminated = True
+            break
+
+env.close()
