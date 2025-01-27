@@ -1,5 +1,7 @@
 from utils.ssl.Navigation import Navigation
 from utils.ssl.base_agent import BaseAgent
+from utils.Point import Point
+import math
 
 class ExampleAgent(BaseAgent):
     def __init__(self, id=0, yellow=False):
@@ -9,21 +11,19 @@ class ExampleAgent(BaseAgent):
         if len(self.targets) == 0:
             return
     
-    #------------------------------------------------------------------------------------------------
-        #target_velocity, target_angle_velocity = Navigation.goToPoint(self.robot, self.targets[0])
-        #self.set_vel(target_velocity)
-        #self.set_angle_vel(target_angle_velocity)
-        
-        
-        
+    #----------------------------------------------------------------------------------------
+    
+
+    
 
 
 
 
 
 
-        
-    #------------------------------------------------------------------------------------------------    
+
+
+    #----------------------------------------------------------------------------------------    
         return
     
     def post_decision(self):
